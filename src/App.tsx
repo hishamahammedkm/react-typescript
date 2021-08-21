@@ -1,24 +1,46 @@
-import React,{FC,createContext} from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import './App.css';
-import { Person,Color } from './components/Persons';
-interface contextValueInterface {
-  name:string
-  age:number
+import List from './List';
+
+interface State {
+  person:{
+    name:string
+    age:number
+    note?:string
+  }[]
 }
-const App:FC = () => {
-  const AppContext = createContext<contextValueInterface | null>(null)
-  type names = "Hisham"|"sanu"|4
-  const name:names = 4
-  const contextValue:contextValueInterface = {
-    name:"hisham",
-    age:22
+
+const App: FC = () => {
+  const [persons, setPersons] = useState<State["person"]>([])
+  const [newPerson,setNewPerson]= useState({
+    name:"",
+    age:0,
+    note:""
+  })
+  const handleChange = (e:React.ChangeEvent<HTMLInputElement>)=>{
+    setNewPerson({...newPerson,
+      [e.target.name]:e.target.value,
+      
+    })
+    
+  }
+  const post = ():void=>{
+    setPersons([...persons,newPerson])
   }
   return (
-    <AppContext.Provider value={contextValue}>
     <div className="App">
-      <Person Color={Color.blue} name='Hisham' age={22}  />
+      <h1>name</h1>
+      <input onChange={handleChange} name='name' type="text" />
+      <h1>age</h1>
+      <input onChange={handleChange} name='age' type="text" />
+      <h1>note</h1>
+      <input onChange={handleChange} name='note' type="text" />
+      <button onClick={post}>ADD</button>
+      <h1>Persons</h1>
+      <List person={persons}  />
+    
+    
     </div>
-    </AppContext.Provider>
   );
 }
 
